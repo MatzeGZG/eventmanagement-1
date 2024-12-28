@@ -9,6 +9,7 @@ import { CalendarContainer } from './components/calendar/CalendarContainer';
 import { AuthProvider } from './features/auth';
 import { AuthContainer } from './features/auth/components/AuthContainer';
 import { ErrorBoundary } from './utils/errorHandling/ErrorBoundary';
+import { NotFound } from './components/common/NotFound';
 
 const App: React.FC = () => {
   return (
@@ -25,6 +26,7 @@ const App: React.FC = () => {
                   <Route path="/map" element={<MapContainer />} />
                   <Route path="/login" element={<AuthContainer />} />
                   <Route path="/signup" element={<AuthContainer />} />
+                  <Route path="*" element={<NotFound />} />
                 </Routes>
               </Layout>
             </MapProvider>
