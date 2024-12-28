@@ -1,4 +1,3 @@
-```typescript
 export interface FeedItem {
   id: string;
   type: 'event' | 'status';
@@ -17,4 +16,3 @@ export interface FeedFilters {
   sort: 'latest' | 'popular' | 'trending';
   timeframe: 'all' | 'today' | 'week' | 'month';
 }
-```
