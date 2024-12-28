@@ -21,7 +21,19 @@ export const useFeed = () => {
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       // Mock data - replace with actual API call
-      const newItems: FeedItem[] = [];
+      const newItems: FeedItem[] = Array.from({ length: 5 }, (_, i) => ({
+        id: `${Date.now()}-${i}`,
+        type: Math.random() > 0.5 ? 'event' : 'status',
+        title: `Feed Item ${feedItems.length + i + 1}`,
+        description: 'This is a mock feed item description for testing purposes.',
+        image: `https://picsum.photos/seed/${Date.now() + i}/800/400`,
+        data: {},
+        likes: Math.floor(Math.random() * 1000),
+        comments: Math.floor(Math.random() * 100),
+        shares: Math.floor(Math.random() * 50),
+        timestamp: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000),
+        userLiked: Math.random() > 0.5
+      }));
       setFeedItems(prev => [...prev, ...newItems]);
       setHasMore(newItems.length > 0);
     } catch (error) {
