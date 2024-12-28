@@ -1,0 +1,53 @@
+import { 
+  Search,
+  Bell,
+  User,
+  Calendar,
+  MessageCircle,
+  MapPin,
+  Users,
+  Star,
+  Trophy,
+  Award,
+  Heart,
+  Settings,
+  LogOut,
+  Mail,
+  Lock,
+  Plus,
+  X,
+  ChevronRight,
+  ChevronLeft,
+  Filter,
+  Tag,
+  Sparkles,
+  Shield
+} from 'lucide-react';
+
+export const Icons = {
+  Search,
+  Bell,
+  User,
+  Calendar,
+  MessageCircle,
+  MapPin,
+  Users,
+  Star,
+  Trophy,
+  Award,
+  Heart,
+  Settings,
+  LogOut,
+  Mail,
+  Lock,
+  Plus,
+  X,
+  ChevronRight,
+  ChevronLeft,
+  Filter,
+  Tag,
+  Sparkles,
+  Shield
+};
+
+export type IconType = keyof typeof Icons;

@@ -1,0 +1,96 @@
+/* Mobile-first responsive design */
+@layer base {
+  :root {
+    --safe-area-top: env(safe-area-inset-top);
+    --safe-area-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Smooth scrolling and momentum */
+.ios-momentum-scroll {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* Better touch targets */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Native-feeling tap states */
+.ios-tap-highlight-none {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.android-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.android-ripple::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: currentColor;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 300ms;
+}
+
+.android-ripple:active::after {
+  opacity: 0.1;
+}
+
+/* Safe area handling */
+.mobile-safe-top {
+  padding-top: max(env(safe-area-inset-top), 1rem);
+}
+
+.mobile-safe-bottom {
+  padding-bottom: max(env(safe-area-inset-bottom), 1rem);
+}
+
+/* Mobile navigation */
+.mobile-nav-item {
+  @apply flex-1 flex flex-col items-center justify-center p-2 text-fjs-silver;
+}
+
+.mobile-nav-item.active {
+  @apply text-fjs-gold;
+}
+
+/* Mobile optimized inputs */
+.mobile-input {
+  @apply w-full p-4 text-lg;
+  min-height: 48px;
+}
+
+/* Mobile modals/sheets */
+.mobile-sheet {
+  @apply fixed inset-x-0 bottom-0 z-50 bg-black rounded-t-2xl;
+  max-height: 90vh;
+}
+
+/* Mobile gestures */
+.mobile-swipe-item {
+  touch-action: pan-y;
+  user-select: none;
+}
+
+/* Mobile performance optimizations */
+.mobile-gpu {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

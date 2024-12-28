@@ -1,0 +1,7 @@
+export const ERROR_CONFIG = {
+  MAX_LOG_SIZE: 100,
+  ERROR_THRESHOLD: 5,
+  ERROR_WINDOW: 60000, // 1 minute
+  RETRY_ATTEMPTS: 3,
+  RETRY_DELAY: 1000, // 1 second
+};
