@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Bell, Search, User, Calendar } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useStore } from '../../store';
 import { PointsDisplay } from '../gamification/PointsDisplay';
@@ -36,61 +36,72 @@ export const Header: React.FC = () => {
 
           {/* Actions */}
           <div className="flex items-center space-x-4">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => toggleDropdown('search')}
-              className="p-2 hover:bg-fjs-charcoal rounded-full transition-colors"
-            >
-              <Search className="w-6 h-6 text-fjs-gold" />
-            </motion.button>
+            {user ? (
+              <>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => toggleDropdown('search')}
+                  className="p-2 hover:bg-fjs-charcoal rounded-full transition-colors"
+                >
+                  <Search className="w-6 h-6 text-fjs-gold" />
+                </motion.button>
 
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => navigate('/calendar')}
-              className="p-2 hover:bg-fjs-charcoal rounded-full transition-colors"
-            >
-              <Calendar className="w-6 h-6 text-fjs-gold" />
-            </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => navigate('/calendar')}
+                  className="p-2 hover:bg-fjs-charcoal rounded-full transition-colors"
+                >
+                  <Calendar className="w-6 h-6 text-fjs-gold" />
+                </motion.button>
 
-            <ChatButton />
+                <ChatButton />
 
-            <div className="relative">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => toggleDropdown('notifications')}
-                className="p-2 hover:bg-fjs-charcoal rounded-full transition-colors"
+                <div className="relative">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => toggleDropdown('notifications')}
+                    className="p-2 hover:bg-fjs-charcoal rounded-full transition-colors"
+                  >
+                    <Bell className="w-6 h-6 text-fjs-gold" />
+                  </motion.button>
+
+                  <AnimatePresence>
+                    {activeDropdown === 'notifications' && (
+                      <NotificationsDropdown />
+                    )}
+                  </AnimatePresence>
+                </div>
+
+                <div className="relative">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => toggleDropdown('user')}
+                    className="p-2 hover:bg-fjs-charcoal rounded-full transition-colors"
+                  >
+                    <User className="w-6 h-6 text-fjs-gold" />
+                  </motion.button>
+
+                  <AnimatePresence>
+                    {activeDropdown === 'user' && (
+                      <UserDropdown onNavigate={() => setActiveDropdown('none')} />
+                    )}
+                  </AnimatePresence>
+                </div>
+
+                <PointsDisplay />
+              </>
+            ) : (
+              <Link
+                to="/login"
+                className="inline-flex items-center px-6 py-2 text-base font-medium text-black bg-gradient-to-r from-amber-200 to-amber-300 rounded-md shadow-sm hover:from-amber-300 hover:to-amber-400 transition-all duration-200 ease-in-out transform hover:scale-105"
               >
-                <Bell className="w-6 h-6 text-fjs-gold" />
-              </motion.button>
-
-              <AnimatePresence>
-                {activeDropdown === 'notifications' && (
-                  <NotificationsDropdown />
-                )}
-              </AnimatePresence>
-            </div>
-
-            <div className="relative">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => toggleDropdown('user')}
-                className="p-2 hover:bg-fjs-charcoal rounded-full transition-colors"
-              >
-                <User className="w-6 h-6 text-fjs-gold" />
-              </motion.button>
-
-              <AnimatePresence>
-                {activeDropdown === 'user' && (
-                  <UserDropdown onNavigate={() => setActiveDropdown('none')} />
-                )}
-              </AnimatePresence>
-            </div>
-
-            {user && <PointsDisplay />}
+                Sign In
+              </Link>
+            )}
           </div>
         </div>
       </div>
