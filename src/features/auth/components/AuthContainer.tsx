@@ -1,16 +1,12 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { LoginForm } from './LoginForm';
 import { SignupForm } from './SignupForm';
 import { TrustIndicators } from './common/TrustIndicators';
 
 export const AuthContainer: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
-  const [isAnimating, setIsAnimating] = useState(false);
 
   const toggleForm = () => {
-    if (isAnimating) return;
-    setIsAnimating(true);
     setIsLogin(prev => !prev);
   };
 
@@ -24,9 +20,7 @@ export const AuthContainer: React.FC = () => {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-black/80 py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <AnimatePresence mode="wait" onExitComplete={() => setIsAnimating(false)}>
-            {isLogin ? <LoginForm /> : <SignupForm />}
-          </AnimatePresence>
+          {isLogin ? <LoginForm onToggleForm={toggleForm} /> : <SignupForm onSwitchToLogin={toggleForm} />}
 
           <div className="mt-6">
             <button

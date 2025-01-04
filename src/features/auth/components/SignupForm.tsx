@@ -71,17 +71,6 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onSwitchToLogin }) => {
       >
         {loading ? 'Creating Account...' : 'Create Account'}
       </button>
-
-      <p className="text-center text-sm text-fjs-silver">
-        Already have an account?{' '}
-        <button
-          type="button"
-          onClick={onSwitchToLogin}
-          className="text-fjs-gold hover:text-fjs-light-gold"
-        >
-          Sign in
-        </button>
-      </p>
     </form>
   );
 };

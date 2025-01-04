@@ -2,9 +2,13 @@ import React, { useState } from 'react';
 import { Mail, Lock } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { FormInput } from './common/FormInput';
-import { PasswordRequirements } from './common/PasswordRequirements';
+import { PasswordRequirements } from '../../../components/common/PasswordRequirements';
 
-export const LoginForm: React.FC = () => {
+interface LoginFormProps {
+  onToggleForm: () => void;
+}
+
+export const LoginForm: React.FC<LoginFormProps> = ({ onToggleForm }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
