@@ -3,6 +3,7 @@ import { Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
 import { FormInput } from '../../../components/common/FormInput';
 import { PasswordRequirements } from '../../../components/common/PasswordRequirements';
 import { useSecureAuth } from '../hooks/useSecureAuth';
+import { useNavigate } from 'react-router-dom';
 
 interface SignupFormProps {
   onSwitchToLogin: () => void;
@@ -17,10 +18,16 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onSwitchToLogin }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordReqs, setShowPasswordReqs] = useState(false);
   const { register, loading } = useSecureAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await register(formData);
+    try {
+      await register(formData);
+      navigate('/');
+    } catch (error) {
+      console.error('Signup failed:', error);
+    }
   };
 
   return (

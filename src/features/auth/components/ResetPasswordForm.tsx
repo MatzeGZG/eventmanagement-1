@@ -14,8 +14,12 @@ export const ResetPasswordForm: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await updatePassword(password);
-    navigate('/login');
+    try {
+      await updatePassword(password);
+      navigate('/');
+    } catch (error) {
+      console.error('Failed to update password:', error);
+    }
   };
 
   return (

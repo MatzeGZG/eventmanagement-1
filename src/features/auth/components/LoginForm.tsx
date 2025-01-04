@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { FormInput } from '../../../components/common/FormInput';
 import { useSecureAuth } from '../hooks/useSecureAuth';
+import { useNavigate } from 'react-router-dom';
 
 interface LoginFormProps {
   onToggleForm: () => void;
@@ -14,10 +15,16 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onToggleForm }) => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const { login, loading } = useSecureAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await login(formData.email, formData.password);
+    try {
+      await login(formData.email, formData.password);
+      navigate('/');
+    } catch (error) {
+      console.error('Login failed:', error);
+    }
   };
 
   return (
