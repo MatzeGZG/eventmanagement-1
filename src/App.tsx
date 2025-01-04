@@ -10,6 +10,8 @@ import { AuthProvider } from './features/auth';
 import { AuthContainer } from './features/auth/components/AuthContainer';
 import { ErrorBoundary } from './utils/errorHandling/ErrorBoundary';
 import { NotFound } from './components/common/NotFound';
+import { ForgotPasswordForm } from './features/auth/components/ForgotPasswordForm';
+import { ResetPasswordForm } from './features/auth/components/ResetPasswordForm';
 
 const App: React.FC = () => {
   return (
@@ -26,6 +28,8 @@ const App: React.FC = () => {
                   <Route path="/map" element={<MapContainer />} />
                   <Route path="/login" element={<AuthContainer />} />
                   <Route path="/signup" element={<AuthContainer />} />
+                  <Route path="/forgot-password" element={<ForgotPasswordForm />} />
+                  <Route path="/reset-password" element={<ResetPasswordForm />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Layout>
