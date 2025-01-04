@@ -1,57 +1,91 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../../../lib/supabase';
-import { useStore } from '../../../store';
+import { useToast } from '../../../hooks/useToast';
 
-interface Achievements {
-  connections: number;
-  eventsAttended: number;
-  reputation: number;
-  level: number;
+interface Achievement {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  unlocked: boolean;
+  progress: number;
+  maxProgress: number;
 }
 
 export const useAchievements = () => {
-  const [achievements, setAchievements] = useState<Achievements>({
-    connections: 0,
-    eventsAttended: 0,
-    reputation: 0,
-    level: 0
-  });
+  const [achievements, setAchievements] = useState<Achievement[]>([]);
   const [loading, setLoading] = useState(true);
-  const user = useStore(state => state.user);
+  const { showToast } = useToast();
 
   useEffect(() => {
     const loadAchievements = async () => {
-      if (!user) return;
-
       try {
-        const { data, error } = await supabase
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return;
+
+        // Get user profile data
+        const { data: profile, error: profileError } = await supabase
           .from('profiles')
-          .select(`
-            connections,
-            events_attended,
-            reputation,
-            level
-          `)
+          .select('xp, level, connections, badges')
           .eq('id', user.id)
           .single();
 
-        if (error) throw error;
+        if (profileError) throw profileError;
 
-        setAchievements({
-          connections: data.connections || 0,
-          eventsAttended: data.events_attended || 0,
-          reputation: data.reputation || 0,
-          level: data.level || 0
-        });
+        // Calculate achievements based on profile data
+        const calculatedAchievements: Achievement[] = [
+          {
+            id: 'first-steps',
+            title: 'First Steps',
+            description: 'Complete your profile setup',
+            icon: '🎯',
+            unlocked: true,
+            progress: 100,
+            maxProgress: 100
+          },
+          {
+            id: 'xp-warrior',
+            title: 'XP Warrior',
+            description: 'Earn your first 1000 XP',
+            icon: '⚔️',
+            unlocked: (profile.xp || 0) >= 1000,
+            progress: Math.min(profile.xp || 0, 1000),
+            maxProgress: 1000
+          },
+          {
+            id: 'social-butterfly',
+            title: 'Social Butterfly',
+            description: 'Connect with 10 other users',
+            icon: '🦋',
+            unlocked: (profile.connections?.length || 0) >= 10,
+            progress: profile.connections?.length || 0,
+            maxProgress: 10
+          },
+          {
+            id: 'badge-collector',
+            title: 'Badge Collector',
+            description: 'Earn 5 different badges',
+            icon: '🏅',
+            unlocked: (profile.badges?.length || 0) >= 5,
+            progress: profile.badges?.length || 0,
+            maxProgress: 5
+          }
+        ];
+
+        setAchievements(calculatedAchievements);
       } catch (error) {
         console.error('Error loading achievements:', error);
+        showToast('Failed to load achievements', 'error');
       } finally {
         setLoading(false);
       }
     };
 
     loadAchievements();
-  }, [user]);
+  }, [showToast]);
 
-  return { achievements, loading };
+  return {
+    achievements,
+    loading
+  };
 };
