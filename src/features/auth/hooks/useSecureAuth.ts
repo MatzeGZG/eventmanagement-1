@@ -65,9 +65,31 @@ export const useSecureAuth = () => {
     }
   }, [showToast]);
 
+  const signOut = useCallback(async () => {
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+
+      showToast('Signed out successfully', 'success');
+      await AuditLogger.log('auth_logout_success', {});
+
+    } catch (error) {
+      console.error('Sign out error:', error);
+      showToast('Failed to sign out. Please try again.', 'error');
+      await AuditLogger.log('auth_logout_failed', {
+        error: error instanceof Error ? error.message : 'Unknown error'
+      }, 'warning');
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  }, [showToast]);
+
   return {
     loading,
     login,
-    register
+    register,
+    signOut
   };
 };

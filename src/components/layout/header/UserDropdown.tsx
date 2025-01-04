@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { User, Settings, LogOut, Award, Heart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../../../store';
+import { useSecureAuth } from '../../../features/auth/hooks/useSecureAuth';
 
 interface UserDropdownProps {
   onNavigate: () => void;
@@ -11,11 +12,23 @@ interface UserDropdownProps {
 export const UserDropdown: React.FC<UserDropdownProps> = ({ onNavigate }) => {
   const navigate = useNavigate();
   const user = useStore(state => state.user);
+  const { signOut, loading } = useSecureAuth();
 
   const handleNavigation = (path: string) => {
     navigate(path);
     onNavigate();
   };
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      onNavigate();
+      navigate('/login');
+    } catch (error) {
+      console.error('Sign out error:', error);
+    }
+  };
+
 
   return (
     <motion.div
@@ -62,7 +75,8 @@ export const UserDropdown: React.FC<UserDropdownProps> = ({ onNavigate }) => {
         <MenuItem
           icon={LogOut}
           label="Sign Out"
-          onClick={() => {/* Implement sign out */}}
+          onClick={handleSignOut}
+          disabled={loading}
           className="text-red-400 hover:bg-red-500/10"
         />
       </div>
@@ -75,18 +89,21 @@ interface MenuItemProps {
   label: string;
   onClick: () => void;
   className?: string;
+  disabled?: boolean;
 }
 
 const MenuItem: React.FC<MenuItemProps> = ({
   icon: Icon,
   label,
   onClick,
-  className = 'text-fjs-silver hover:text-white'
+  className = 'text-fjs-silver hover:text-white',
+  disabled = false
 }) => (
   <motion.button
     whileHover={{ x: 4 }}
     onClick={onClick}
-    className={`w-full flex items-center space-x-3 px-4 py-2 rounded-lg hover:bg-black/20 transition-colors ${className}`}
+    disabled={disabled}
+    className={`w-full flex items-center space-x-3 px-4 py-2 rounded-lg hover:bg-black/20 transition-colors ${className} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
   >
     <Icon className="w-5 h-5" />
     <span>{label}</span>
