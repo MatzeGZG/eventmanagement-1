@@ -21,29 +21,53 @@ export const useSecureAuth = () => {
       if (!data.user) throw new Error('No user returned');
 
       showToast('Login successful', 'success');
-      awardPoints(50); // Award points for first login of the day
+      awardPoints(50);
 
-      // Log successful login
       await AuditLogger.log('auth_login_success', {
         userId: data.user.id
       });
 
     } catch (error) {
       console.error('Login error:', error);
-      
-      // Log failed login attempt
       await AuditLogger.log('auth_login_failed', {
         error: error instanceof Error ? error.message : 'Unknown error'
       }, 'warning');
-
       throw error;
     } finally {
       setLoading(false);
     }
   }, [showToast, awardPoints]);
 
+  const register = useCallback(async (formData: { email: string; password: string; name: string }) => {
+    setLoading(true);
+    try {
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: {
+          data: {
+            name: formData.name
+          }
+        }
+      });
+
+      if (authError) throw authError;
+      if (!authData.user) throw new Error('Registration failed');
+
+      showToast('Registration successful! Please check your email to verify your account.', 'success');
+
+    } catch (error) {
+      console.error('Registration failed:', error);
+      showToast('Registration failed. Please try again.', 'error');
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  }, [showToast]);
+
   return {
     loading,
-    login
+    login,
+    register
   };
 };
