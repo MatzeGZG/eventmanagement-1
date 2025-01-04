@@ -1,73 +1,75 @@
 import React, { useState } from 'react';
-import { Mail, Lock } from 'lucide-react';
-import { motion } from 'framer-motion';
-import { FormInput } from './common/FormInput';
-import { PasswordRequirements } from '../../../components/common/PasswordRequirements';
+import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { FormInput } from '../../../components/common/FormInput';
+import { useSecureAuth } from '../hooks/useSecureAuth';
 
 interface LoginFormProps {
   onToggleForm: () => void;
 }
 
 export const LoginForm: React.FC<LoginFormProps> = ({ onToggleForm }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
   const [showPassword, setShowPassword] = useState(false);
+  const { login, loading } = useSecureAuth();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await login(formData.email, formData.password);
+  };
 
   return (
-    <form className="space-y-6 w-full max-w-md mx-auto">
+    <form onSubmit={handleSubmit} className="space-y-6">
       <FormInput
         icon={Mail}
         label="Email"
         type="email" 
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        value={formData.email}
+        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+        placeholder="Enter your email"
         required
-        autoFocus
-        aria-label="Email address"
+        disabled={loading}
+        autoComplete="email"
       />
 
-      <div className="space-y-2">
+      <div className="relative">
         <FormInput
           icon={Lock}
           label="Password"
           type={showPassword ? 'text' : 'password'}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={formData.password}
+          onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+          placeholder="Enter your password"
           required
-          aria-label="Password"
-          showToggle
-          onToggleVisibility={() => setShowPassword(!showPassword)}
+          disabled={loading}
+          autoComplete="current-password"
         />
+        <button
+          type="button"
+          onClick={() => setShowPassword(!showPassword)}
+          className="absolute right-3 top-[12px] text-fjs-silver hover:text-fjs-gold"
+          disabled={loading}
+          aria-label={showPassword ? "Hide password" : "Show password"}
+        >
+          {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+        </button>
 
-        <div className="flex items-center justify-between text-sm">
-          <label className="flex items-center">
-            <input
-              type="checkbox"
-              checked={rememberMe}
-              onChange={(e) => setRememberMe(e.target.checked)}
-              className="text-fjs-gold rounded border-fjs-charcoal focus:ring-fjs-gold"
-            />
-            <span className="ml-2 text-fjs-silver">Remember me</span>
-          </label>
-
-          <a href="/forgot-password" className="text-fjs-gold hover:text-fjs-light-gold">
+        <div className="mt-2 flex items-center justify-end">
+          <a href="/forgot-password" className="text-sm text-fjs-gold hover:text-fjs-light-gold">
             Forgot password?
           </a>
         </div>
       </div>
 
-      <motion.button
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
+      <button
         type="submit"
         disabled={loading}
-        className="w-full bg-gradient-gold text-black py-3 rounded-lg font-medium 
-                 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full px-4 py-2 bg-gradient-gold text-fjs-charcoal rounded-lg font-medium hover:bg-fjs-light-gold transition-colors disabled:opacity-50"
       >
         {loading ? 'Signing in...' : 'Sign in'}
-      </motion.button>
+      </button>
     </form>
   );
 };

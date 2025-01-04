@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Lock, User } from 'lucide-react';
+import { Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
 import { FormInput } from '../../../components/common/FormInput';
 import { PasswordRequirements } from '../../../components/common/PasswordRequirements';
 import { useSecureAuth } from '../hooks/useSecureAuth';
@@ -14,6 +14,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onSwitchToLogin }) => {
     password: '',
     name: ''
   });
+  const [showPassword, setShowPassword] = useState(false);
   const [showPasswordReqs, setShowPasswordReqs] = useState(false);
   const { register, loading } = useSecureAuth();
 
@@ -33,6 +34,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onSwitchToLogin }) => {
         placeholder="Enter your name"
         required
         disabled={loading}
+        autoComplete="name"
       />
 
       <FormInput
@@ -44,20 +46,31 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onSwitchToLogin }) => {
         placeholder="Enter your email"
         required
         disabled={loading}
+        autoComplete="email"
       />
 
-      <div>
+      <div className="relative">
         <FormInput
           icon={Lock}
           label="Password"
-          type="password"
+          type={showPassword ? 'text' : 'password'}
           value={formData.password}
           onChange={(e) => setFormData({ ...formData, password: e.target.value })}
           onFocus={() => setShowPasswordReqs(true)}
           placeholder="Create a password"
           required
           disabled={loading}
+          autoComplete="new-password"
         />
+        <button
+          type="button"
+          onClick={() => setShowPassword(!showPassword)}
+          className="absolute right-3 top-[12px] text-fjs-silver hover:text-fjs-gold"
+          disabled={loading}
+          aria-label={showPassword ? "Hide password" : "Show password"}
+        >
+          {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+        </button>
         <PasswordRequirements 
           password={formData.password}
           visible={showPasswordReqs}
