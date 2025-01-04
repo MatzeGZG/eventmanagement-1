@@ -1,4 +1,3 @@
-```tsx
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Edit, MapPin, Calendar } from 'lucide-react';
@@ -11,6 +10,8 @@ interface ProfileHeaderProps {
 }
 
 export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user, onEdit }) => {
+  const fullName = `${user.firstName}${user.surname ? ` ${user.surname}` : ''}`;
+
   return (
     <motion.div 
       className="relative bg-gradient-dark rounded-xl p-6 overflow-hidden"
@@ -31,7 +32,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user, onEdit }) =>
           <div className="w-24 h-24 rounded-full overflow-hidden ring-4 ring-fjs-gold">
             <img
               src={user.avatar || 'https://via.placeholder.com/96'}
-              alt={user.name}
+              alt={fullName}
               className="w-full h-full object-cover"
             />
           </div>
@@ -44,7 +45,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user, onEdit }) =>
         <div className="flex-1">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-fjs-gold">{user.name}</h1>
+              <h1 className="text-2xl font-bold text-fjs-gold">{fullName}</h1>
               <p className="text-fjs-silver">{user.level}</p>
             </div>
             {onEdit && (
@@ -74,4 +75,3 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user, onEdit }) =>
     </motion.div>
   );
 };
-```

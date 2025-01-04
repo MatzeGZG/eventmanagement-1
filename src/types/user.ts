@@ -21,4 +21,6 @@ export interface User {
   interests: string[];
   connections: string[];
   createdAt: Date;
+  online?: boolean;
+  location?: string;
 }

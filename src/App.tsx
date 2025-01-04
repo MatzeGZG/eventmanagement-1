@@ -12,6 +12,8 @@ import { ErrorBoundary } from './utils/errorHandling/ErrorBoundary';
 import { NotFound } from './components/common/NotFound';
 import { ForgotPasswordForm } from './features/auth/components/ForgotPasswordForm';
 import { ResetPasswordForm } from './features/auth/components/ResetPasswordForm';
+import { ProfileContainer } from './features/profile/components/ProfileContainer';
+import { PrivateRoute } from './components/common/PrivateRoute';
 
 const App: React.FC = () => {
   return (
@@ -26,6 +28,14 @@ const App: React.FC = () => {
                   <Route path="/feed" element={<HomeFeed />} />
                   <Route path="/calendar" element={<CalendarContainer />} />
                   <Route path="/map" element={<MapContainer />} />
+                  <Route 
+                    path="/profile" 
+                    element={
+                      <PrivateRoute>
+                        <ProfileContainer />
+                      </PrivateRoute>
+                    } 
+                  />
                   <Route path="/login" element={<AuthContainer />} />
                   <Route path="/signup" element={<AuthContainer />} />
                   <Route path="/forgot-password" element={<ForgotPasswordForm />} />
